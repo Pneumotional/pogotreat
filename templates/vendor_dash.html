@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .custom-brown {
+            background-color: #513626;
+        }
+        .custom-brown-text {
+            color: #513626;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <nav class="custom-brown shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-white text-lg font-semibold">{{ vendor.business_name }}</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <!-- Total Items Sold -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-gray-500 text-sm font-medium">Total Items</h3>
+                    <svg class="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                </div>
+                <p class="mt-2 text-3xl font-semibold text-gray-900">{{ total_items }}</p>
+                <div class="mt-1 text-sm text-gray-500">Total items sold</div>
+            </div>
+
+            <!-- Total Revenue -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-gray-500 text-sm font-medium">Revenue</h3>
+                    <svg class="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <p class="mt-2 text-3xl font-semibold text-gray-900">${{ total_revenue|floatformat:2 }}</p>
+                <div class="mt-1 text-sm text-gray-500">Total revenue generated</div>
+            </div>
+
+            <!-- Commission Earned -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-gray-500 text-sm font-medium">Commission</h3>
+                    <svg class="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                </div>
+                <p class="mt-2 text-3xl font-semibold text-gray-900">${{ total_commission|floatformat:2 }}</p>
+                <div class="mt-1 text-sm text-gray-500">Commission earned</div>
+            </div>
+
+            <!-- Commission Details -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-gray-500 text-sm font-medium">Rates</h3>
+                    <svg class="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <div class="mt-2">
+                    <p class="text-lg font-medium text-gray-900">${{ vendor.item_rate }} per item</p>
+                    <p class="text-sm text-gray-500">Item Rate</p>
+                </div>
+                <div class="mt-2">
+                    <p class="text-lg font-medium text-gray-900">{{ vendor.commission_rate }}%</p>
+                    <p class="text-sm text-gray-500">Commission Rate</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sales and Actions Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Pending Sales Submissions -->
+            <div class="lg:col-span-2 bg-white rounded-lg shadow">
+                <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                    <h2 class="text-lg font-medium text-gray-900">Pending Sales Submissions</h2>
+                    <button onclick="location.href='#'" 
+                            class="px-4 py-2 text-sm font-medium text-white custom-brown rounded-md hover:opacity-90">
+                        Submit New Sale
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expected Revenue</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for submission in pending_submissions %}
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ submission.submitted_at|date:"M d, Y" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ submission.items_sold }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ submission.total_revenue|floatformat:2 }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                        Pending
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="px-6 py-4 text-sm text-gray-500 text-center">No pending submissions</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Actions Card -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-lg font-medium text-gray-900">Quick Actions</h2>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <button onclick="location.href='{% url 'submit_sales' %}'" 
+                                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white custom-brown hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brown-500">
+                            Submit New Sale
+                        </button>
+                        
+                        <button onclick="location.href='{% url 'request_withdrawal' %}'" 
+                                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white custom-brown hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brown-500">
+                            Request Withdrawal
+                        </button>
+                        
+                        <!-- Pending Withdrawals -->
+                        <div class="mt-4">
+                            <h3 class="text-sm font-medium text-gray-500">Pending Withdrawals</h3>
+                            <p class="mt-1 text-2xl font-semibold text-gray-900">{{ pending_withdrawals }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

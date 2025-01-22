@@ -1,0 +1,95 @@
+<!-- templates/vendors/request_withdrawal.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Withdrawal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<style>
+    .custom-brown {
+        background-color: #513626;
+    }
+</style>    
+<body class="bg-gray-50">
+    <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-lg">
+            <div>
+                <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                    Request Commission Withdrawal
+                </h2>
+                <p class="mt-2 text-center text-sm text-gray-600">
+                    Available Balance: ${{ request.user.vendorprofile.available_commission }}
+                </p>
+            </div>
+
+            <form class="mt-8 space-y-6" method="POST">
+                {% csrf_token %}
+                
+                <div class="space-y-4">
+                    <div>
+                        <label for="amount" class="block text-sm font-medium text-gray-700">
+                            Withdrawal Amount
+                        </label>
+                        <div class="mt-2 relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="text-gray-500 sm:text-sm">$</span>
+                            </div>
+                            <input
+                                type="number"
+                                name="amount"
+                                id="amount"
+                                required
+                                step="0.01"
+                                min="0.01"
+                                max="{{ request.user.vendorprofile.available_commission }}"
+                                class="p-4 block w-full pl-8 pr-12 rounded-md border-gray-300 shadow-sm focus:ring-2 focus:ring-[#513626] focus:border-[#513626]"
+                                placeholder="0.00"
+                            >
+                        </div>
+                        {% if error %}
+                        <p class="mt-2 text-sm text-red-600">{{ error }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-md">
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input
+                                    id="terms"
+                                    name="terms"
+                                    type="checkbox"
+                                    required
+                                    class="h-4 w-4 text-[#513626] focus:ring-[#513626] border-gray-300 rounded"
+                                >
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="terms" class="font-medium text-gray-700">
+                                    I understand that
+                                </label>
+                                <p class="text-gray-500">
+                                    This withdrawal request will be reviewed by an administrator and may take up to 48 hours to process.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <a href="{% url 'vendor_dashboard' %}" 
+                       class="flex-1 justify-center py-3 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#513626]">
+                        Cancel
+                    </a>
+                    <button
+                        type="submit"
+                        class="flex-1 justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white custom-brown focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#513626]"
+                    >
+                        Request Withdrawal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

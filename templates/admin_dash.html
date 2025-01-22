@@ -1,0 +1,573 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .custom-brown {
+            background-color: #513626;
+        }
+        .custom-brown-text {
+            color: #513626;
+        }
+        .custom-brown-border {
+            border-color: #513626;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    {% block content %}
+    <div class="min-h-screen">
+        <!-- Navigation -->
+        <nav class="custom-brown">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="text-white font-bold text-xl">Admin Dashboard</div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-white mr-4">Welcome, {{ request.user.username }}</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="p-5">
+                        <div class="flex items-center">
+                            <div class="flex-1">
+                                <div class="text-sm font-medium text-gray-500 truncate">Total Vendors</div>
+                                <div class="mt-1 text-3xl font-semibold text-gray-900">{{ total_vendors }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="p-5">
+                        <div class="flex items-center">
+                            <div class="flex-1">
+                                <div class="text-sm font-medium text-gray-500 truncate">Total Sales</div>
+                                <div class="mt-1 text-3xl font-semibold text-gray-900">${{ total_sales|floatformat:2 }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="p-5">
+                        <div class="flex items-center">
+                            <div class="flex-1">
+                                <div class="text-sm font-medium text-gray-500 truncate">Pending Applications</div>
+                                <div class="mt-1 text-3xl font-semibold text-gray-900">{{ pending_applications }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="p-5">
+                        <div class="flex items-center">
+                            <div class="flex-1">
+                                <div class="text-sm font-medium text-gray-500 truncate">Pending Withdrawals</div>
+                                <div class="mt-1 text-3xl font-semibold text-gray-900">{{ pending_withdrawals }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="p-5">
+                        <div class="flex items-center">
+                            <div class="flex-1">
+                                <div class="text-sm font-medium text-gray-500 truncate">Total Items Sold</div>
+                                <div class="mt-1 text-3xl font-semibold text-gray-900">{{ total_items }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="border-b border-gray-200 mb-6">
+                <nav class="-mb-px flex space-x-8">
+                    <a href="#" class="tab-link border-b-2 custom-brown-text custom-brown-border py-4 px-1" data-tab="vendors">
+                        Vendors
+                    </a>
+                    <a href="#" class="tab-link border-b-2 border-transparent text-gray-500 hover:text-gray-700 py-4 px-1" data-tab="applications">
+                        Applications
+                    </a>
+                    <a href="#" class="tab-link border-b-2 border-transparent text-gray-500 hover:text-gray-700 py-4 px-1" data-tab="withdrawals">
+                        Withdrawal Requests
+                    </a>
+                    <a href="#" class="tab-link border-b-2 border-transparent text-gray-500 hover:text-gray-700 py-4 px-1" data-tab="pending-sales">
+                        Pending Sales
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Tab Contents -->
+            <div id="vendors" class="tab-content">
+                <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Sales</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Commission Rate</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Rate</th>
+
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for vendor in vendors %}
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">{{ vendor.business_name }}</div>
+                                    <div class="text-sm text-gray-500">{{ vendor.user.email }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">${{ vendor.total_sales|floatformat:2 }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <form action="{% url 'update_commission' vendor.id %}" method="POST" class="commission-form" data-vendor-id="{{ vendor.id }}">
+                                        {% csrf_token %}
+                                        <input type="number" 
+                                               step="0.1" 
+                                               value="{{ vendor.commission_rate }}" 
+                                               class="w-20 rounded border-gray-300 text-sm"
+                                               name="commission_rate"
+                                               required>%
+                                        <button type="submit" class="ml-2 text-sm custom-brown-text hover:opacity-80">Update</button>
+                                    </form>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                                 {% if vendor.is_approved %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                        {{ vendor.is_approved|yesno:"Active,Inactive" }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <button class="text-blue-600 hover:text-blue-900 mr-3">View Details</button>
+                                    {% if vendor.is_approved %}
+                                    <button class="text-red-600 hover:text-red-900">Deactivate</button>
+                                    {% else %}
+                                    <button class="text-green-600 hover:text-green-900">Activate</button>
+                                    {% endif %}
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <form class="item-rate-form" data-vendor-id="{{ vendor.id }}">
+                                        <input type="number" step="0.01" value="{{ vendor.item_rate }}" 
+                                               class="w-24 rounded border-gray-300 text-sm"
+                                               name="item_rate">
+                                        <button type="submit" class="ml-2 text-sm custom-brown-text hover:opacity-80">Update</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Add this with other tab contents -->
+<div id="pending-sales" class="tab-content hidden">
+    <div class="bg-white shadow overflow-hidden sm:rounded-md">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Submitted</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for submission in pending_sales %}
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">{{ submission.vendor.business_name }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {{ submission.items_sold }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ${{ submission.total_revenue|floatformat:2 }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {{ submission.submitted_at|date:"M d, Y" }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button class="text-green-600 hover:text-green-900 mr-3" 
+                                onclick="processSale({{ submission.id }}, 'approve')">Approve</button>
+                        <button class="text-red-600 hover:text-red-900"
+                                onclick="processSale({{ submission.id }}, 'reject')">Reject</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+            <div id="applications" class="tab-content hidden">
+                <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Business Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Applied On</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for application in pending_applications_list %}
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">{{ application.business_name }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ application.full_name }}</div>
+                                    <div class="text-sm text-gray-500">{{ application.email }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ application.created_at|date:"M d, Y" }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <button class="text-green-600 hover:text-green-900 mr-3" 
+                                            onclick="approveApplication({{ application.id }})">Approve</button>
+                                    <button class="text-red-600 hover:text-red-900"
+                                            onclick="rejectApplication({{ application.id }})">Reject</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="withdrawals" class="tab-content hidden">
+                <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Request Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for withdrawal in pending_withdrawals_list %}
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">{{ withdrawal.vendor.business_name }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    ${{ withdrawal.amount|floatformat:2 }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ withdrawal.request_date|date:"M d, Y" }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <button class="text-green-600 hover:text-green-900 mr-3"
+                                            onclick="approveWithdrawal({{ withdrawal.id }})">Approve</button>
+                                    <button class="text-red-600 hover:text-red-900"
+                                            onclick="rejectWithdrawal({{ withdrawal.id }})">Reject</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        document.querySelectorAll('.tab-link').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = tab.getAttribute('data-tab');
+                
+                // Update tab styles
+                document.querySelectorAll('.tab-link').forEach(t => {
+                    t.classList.remove('custom-brown-text', 'custom-brown-border');
+                    t.classList.add('text-gray-500', 'border-transparent');
+                });
+                tab.classList.remove('text-gray-500', 'border-transparent');
+                tab.classList.add('custom-brown-text', 'custom-brown-border');
+                
+                // Show/hide content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+                document.getElementById(targetId).classList.remove('hidden');
+            });
+        });
+
+// Commission rate update
+document.querySelectorAll('.commission-form').forEach(form => {
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const vendorId = form.getAttribute('data-vendor-id');
+        const rate = form.querySelector('input[name="commission_rate"]').value;
+        
+        try {
+            const formData = new FormData();
+            formData.append('commission_rate', rate);
+            formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+            
+            const response = await fetch(`/update-commission/${vendorId}/`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                alert(data.message || 'Commission rate updated successfully');
+            } else {
+                alert(data.message || 'Failed to update commission rate');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while updating commission rate');
+        }
+    });
+});
+        // CSRF token helper
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Application handling functions
+        async function approveApplication(applicationId) {
+            if (confirm('Are you sure you want to approve this application?')) {
+                try {
+                    const response = await fetch(`/api/approve-application/${applicationId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Failed to approve application');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while processing the application');
+                }
+            }
+        }
+
+        async function rejectApplication(applicationId) {
+            if (confirm('Are you sure you want to reject this application?')) {
+                try {
+                    const response = await fetch(`/api/reject-application/${applicationId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Failed to reject application');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while processing the application');
+                }
+            }
+        }
+
+        // Withdrawal handling functions
+        async function approveWithdrawal(withdrawalId) {
+            if (confirm('Are you sure you want to approve this withdrawal request?')) {
+                try {
+                    const response = await fetch(`/api/approve-withdrawal/${withdrawalId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Failed to approve withdrawal');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while processing the withdrawal');
+                }
+            }
+        }
+
+        async function rejectWithdrawal(withdrawalId) {
+            if (confirm('Are you sure you want to reject this withdrawal request?')) {
+                try {
+                    const response = await fetch(`/api/reject-withdrawal/${withdrawalId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Failed to reject withdrawal');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while processing the withdrawal');
+                }
+            }
+        }
+
+        // Add this to your existing script section
+// Replace the existing processSale function
+async function processSale(saleId, action) {
+    if (confirm(`Are you sure you want to ${action} this sale?`)) {
+        try {
+            const formData = new FormData();
+            formData.append('action', action);
+            formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+            
+            const response = await fetch(`/process-sale-submission/${saleId}/`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert(`Failed to ${action} sale`);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while processing the sale');
+        }
+    }
+}
+
+// Update the vendor commission form handling
+document.querySelectorAll('.commission-form').forEach(form => {
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const vendorId = form.getAttribute('data-vendor-id');
+        const rate = form.querySelector('input[name="commission_rate"]').value;
+        
+        try {
+            const formData = new FormData();
+            formData.append('commission_rate', rate);
+            formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+            
+            const response = await fetch(`/update-commission/${vendorId}/`, {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (response.ok) {
+                alert('Commission rate updated successfully');
+            } else {
+                alert('Failed to update commission rate');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while updating commission rate');
+        }
+    });
+});
+
+// Item rate update handling
+document.querySelectorAll('.item-rate-form').forEach(form => {
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const vendorId = form.getAttribute('data-vendor-id');
+        const rateInput = form.querySelector('input[name="item_rate"]');
+        const rate = rateInput.value;
+        
+        try {
+            const formData = new FormData();
+            formData.append('item_rate', rate);
+            formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+            
+            const response = await fetch(`/update-item-rate/${vendorId}/`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                // Update the displayed total sales for this vendor
+                const vendorRow = form.closest('tr');
+                const totalSalesCell = vendorRow.querySelector('td:nth-child(2) .text-sm');
+                if (totalSalesCell) {
+                    totalSalesCell.textContent = `$${parseFloat(data.total_sales).toFixed(2)}`;
+                }
+                
+                // Update the total sales at the top of the dashboard if it exists
+                const totalSalesCard = document.querySelector('[data-total-sales]');
+                if (totalSalesCard) {
+                    const currentTotal = parseFloat(totalSalesCard.dataset.totalSales);
+                    const newTotal = currentTotal + (data.total_sales - parseFloat(totalSalesCard.textContent.replace('$', '')));
+                    totalSalesCard.textContent = `$${newTotal.toFixed(2)}`;
+                    totalSalesCard.dataset.totalSales = newTotal;
+                }
+                
+                alert('Item rate updated successfully');
+            } else {
+                throw new Error(data.message || 'Failed to update item rate');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while updating item rate');
+        }
+    });
+});
+ 
+
+
+    </script>
+    {% endblock %}
+</body>
+</html>

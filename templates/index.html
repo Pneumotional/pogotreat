@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>PogoTreat Bakery</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="module" src="script.js"></script>
+  </head>
+  <body>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+          }
+          
+          body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            color: #fff;
+            background-color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+          }
+          
+          nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background-color: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+          }
+          
+          .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+          }
+          
+          .logo-img {
+            width: 40px;
+            height: 40px;
+            animation: bounce 2s infinite;
+          }
+          
+          .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #da936b;
+          }
+          
+          .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+          }
+          
+          nav a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: 500;
+            transition: all 0.3s ease;
+          }
+          
+          nav a:hover {
+            color: #feccaf;
+          }
+          
+          nav a[href="/register.html"] {
+            background-color: #513626;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+          }
+          
+          nav a[href="/register.html"]:hover {
+            background-color: #da936b;
+            transform: translateY(-2px);
+          }
+          
+          .hero {
+            text-align: center;
+            padding: 8rem 2rem;
+            position: relative;
+            background: linear-gradient(rgba(20, 15, 10, 0.85), rgba(20, 15, 10, 0.85)),
+                        url('https://images.unsplash.com/photo-1517433670267-08bbd4be890f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1980&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+          }
+          
+          .hero h1 {
+            font-size: 3.5rem;
+            color: #fff;
+            margin-bottom: 1rem;
+            animation: fadeInDown 1s ease-out;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+          }
+          
+          .hero p {
+            font-size: 1.3rem;
+            color: #f0f0f0;
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease-out 0.3s backwards;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+          }
+          
+          .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 0 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+          }
+          
+          .cta-card {
+            flex: 1;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            text-decoration: none;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.8s ease-out 0.6s backwards;
+          }
+          
+          .cta-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 0.15);
+          }
+          
+          .cta-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1.5rem;
+            filter: brightness(0) invert(1);
+          }
+          
+          .cta-card h2 {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 1rem;
+          }
+          
+          .cta-card p {
+            font-size: 1rem;
+            color: #f0f0f0;
+            margin: 0;
+            text-shadow: none;
+          }
+          
+          footer {
+            margin-top: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+          }
+          
+          /* Tablet Styles (768px to 1024px) */
+          @media screen and (max-width: 1024px) {
+            .hero h1 {
+              font-size: 2.8rem;
+            }
+          
+            .hero p {
+              font-size: 1.1rem;
+            }
+          
+            .cta-buttons {
+              padding: 0 2rem;
+            }
+          
+            .cta-card h2 {
+              font-size: 1.3rem;
+            }
+          
+            .cta-card p {
+              font-size: 0.9rem;
+            }
+          
+            .logo-text {
+              font-size: 1.5rem;
+            }
+          }
+          
+          /* Mobile Styles (up to 767px) */
+          @media screen and (max-width: 767px) {
+            nav {
+              padding: 1rem;
+            }
+          
+            .logo-img {
+              width: 32px;
+              height: 32px;
+            }
+          
+            .logo-text {
+              font-size: 1.2rem;
+            }
+          
+            .nav-links {
+              gap: 1rem;
+            }
+          
+            nav a[href="/register.html"] {
+              padding: 0.4rem 1rem;
+              font-size: 0.9rem;
+            }
+          
+            .hero {
+              padding: 4rem 1rem;
+            }
+          
+            .hero h1 {
+              font-size: 2rem;
+            }
+          
+            .hero p {
+              font-size: 1rem;
+              margin-bottom: 2rem;
+            }
+          
+            .cta-buttons {
+              flex-direction: column;
+              gap: 1rem;
+            }
+          
+            .cta-card {
+              padding: 1.5rem;
+            }
+          
+            .cta-icon {
+              width: 48px;
+              height: 48px;
+              margin-bottom: 1rem;
+            }
+          
+            .cta-card h2 {
+              font-size: 1.2rem;
+              margin-bottom: 0.5rem;
+            }
+          
+            .cta-card p {
+              font-size: 0.9rem;
+            }
+          }
+          
+          /* Small Mobile Styles (up to 375px) */
+          @media screen and (max-width: 375px) {
+            .logo-text {
+              font-size: 1rem;
+            }
+          
+            .nav-links {
+              gap: 0.8rem;
+            }
+          
+            nav a {
+              font-size: 0.9rem;
+            }
+          
+            .hero h1 {
+              font-size: 1.8rem;
+            }
+          
+            .hero p {
+              font-size: 0.9rem;
+            }
+          }
+          
+          @keyframes bounce {
+            0%, 100% {
+              transform: translateY(0);
+            }
+            50% {
+              transform: translateY(-10px);
+            }
+          }
+          
+          @keyframes fadeInDown {
+            from {
+              opacity: 0;
+              transform: translateY(-20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          
+          @keyframes fadeInUp {
+            from {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+    </style>
+    <nav>
+      <div class="logo">
+        <img src="https://i.ibb.co/3r8xC8p/treat-image-new.png" alt="Treat Icon" class="logo-img">
+        <span class="logo-text">PogoTreat</span>
+      </div>
+      <div class="nav-links">
+        <a href="{% url 'become_vendor' %}">Register</a>
+        <a href="{% url 'login' %}">Login</a>
+      </div>
+    </nav>
+
+    <main class="hero">
+      <h1>Welcome to PogoTreat</h1>
+      <p>Earn 250 GHS Weekly 
+        Selling Pogo Pastries!</p>
+      
+      <div class="cta-buttons">
+        <a href="{% url 'become_vendor' %}" class="cta-card">
+          <img src="https://cdn-icons-png.flaticon.com/512/1041/1041373.png" alt="Vendor Icon" class="cta-icon">
+          <h2>Register as a Vendor</h2>
+          <p>Start Selling Fresh Pastries and Earn Commissions with Pogo Treats!</p>
+        </a>
+        
+        <a href="{% url 'login' %}" class="cta-card">
+          <img src="https://cdn-icons-png.flaticon.com/512/2936/2936690.png" alt="Sales Icon" class="cta-icon">
+          <h2>Check Your Sales</h2>
+          <p>Monitor your business performance</p>
+        </a>
+      </div>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 PogoTreat. All rights reserved.</p>
+    </footer>
+  </body>
+</html>
