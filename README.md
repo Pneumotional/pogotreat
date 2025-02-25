@@ -1,6 +1,3 @@
-Here's a detailed and clear description for your GitHub repository:
-
----
 
 # Vendor Management System
 
